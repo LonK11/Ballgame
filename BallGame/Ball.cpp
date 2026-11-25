@@ -2,13 +2,14 @@
 #include "Paddle.h"
 #include <algorithm>
 
-Ball::Ball(float radius) 
-	: speedX(200.f), speedY(150.f)
+Ball::Ball(float radius, const sf::Texture* textureBall)
+	: speedX(550.f), speedY(0.f)
 {
 	ball.setRadius(radius);
 	ball.setPointCount(100); // ”станавливаем количество точек дл€ сглаживани€ круга
 	ball.setFillColor(sf::Color::Blue);// ”станавливаем цвет м€ча
-	ball.setPosition(400.f - radius, 300.f - radius); // ÷ентрируем м€ч в окне
+	ball.setPosition(700.f - radius, 400.f - radius); // ÷ентрируем м€ч в окне
+	ball.setTexture(textureBall);
 }
 
 void Ball::Update(float deltaTime, const sf::RenderWindow& window)
@@ -98,6 +99,6 @@ void Ball::Reset(const sf::RenderWindow& window)
 		window.getSize().y / 2.f - radius
 	);
 
-	speedX = 200.f;
-	speedY = 150.f;
+	speedX = 550.f;
+	speedY = 0.f;
 }

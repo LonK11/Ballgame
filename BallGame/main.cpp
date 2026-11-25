@@ -8,15 +8,18 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1600, 900), "Ball Game");
 	sf::Texture backgroundTexture;
 	sf::Sprite backgroundSprite;
+	sf::Texture TextureBall;
 
 	if(!backgroundTexture.loadFromFile("Images/space.png"))
 		return -1;
+	if(!TextureBall.loadFromFile("Images/ball.png"))
+		return -1;
 	backgroundSprite.setTexture(backgroundTexture);
-	backgroundSprite.setScale(1.f, 0.75f);
+	backgroundSprite.setScale(1.f, 1.f);
 
 	sf::Clock clock;
 
-	Ball ball(17.5f); // Создаем мяч с радиусом 25 пикселей
+	Ball ball(17.5f, &TextureBall); // Создаем мяч с радиусом 25 пикселей
 
 	//Players
 	Paddle player1(30.f, 450.f, 15.f, 150.f,
@@ -32,6 +35,7 @@ int main()
 
 	if (!font.loadFromFile("Fonts/arialmt.ttf"))
 		return -1;
+
 	sf::Text scoreText1;
 	sf::Text scoreText2;
 	sf::Text winnerText;
@@ -49,7 +53,7 @@ int main()
 	winnerText.setFont(font);
 	winnerText.setCharacterSize(50);
 	winnerText.setFillColor(sf::Color::Yellow);
-	winnerText.setPosition(800.f, 450.f);
+	winnerText.setPosition(650.f, 380.f);
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -79,7 +83,8 @@ int main()
 
 		window.clear();
 		//Прорисовка фона
-		window.draw(backgroundSprite);
+		//window.draw(backgroundSprite);
+		// 
 		//Update
 		if (!gameOver)
 		{

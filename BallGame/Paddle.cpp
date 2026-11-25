@@ -6,8 +6,10 @@ Paddle::Paddle(float x, float y, float width, float height,
 	upKey(up), downKey(down)
 {
 	paddle.setSize(sf::Vector2f(width, height));
-	paddle.setFillColor(sf::Color::White);
+	paddle.setFillColor(sf::Color(0, 0, 0, 0));
 	paddle.setPosition(x, y);
+	paddle.setOutlineThickness(2.f);
+	paddle.setOutlineColor(sf::Color::White);
 }
 
 void Paddle::Update(float deltaTime, const sf::RenderWindow& window) {

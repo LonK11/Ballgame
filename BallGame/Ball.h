@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <string>
 
 class Paddle;
 
@@ -12,10 +13,11 @@ private:
 
 	float speedX;
 	float speedY;
+	const sf::Texture* textureBall;
 
 public:
 	// Конструктор
-	Ball(float radius);
+	Ball(float radius, const sf::Texture* textureBall);
 
 	// Методы для управления мячом
 	void Update(float deltaTime, const sf::RenderWindow& window);
