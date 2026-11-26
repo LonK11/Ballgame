@@ -1,14 +1,26 @@
 #include <SFML/Graphics.hpp>
 #include "Ball.h"
 #include "Paddle.h"
+#include "Menu.h"
 #include <string>
+
+enum class GameState
+{
+	Menu,
+	Playing,
+	GameOver
+};
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1600, 900), "Ball Game");
+	GameState gameState = GameState::Menu;
 	sf::Texture backgroundTexture;
 	sf::Sprite backgroundSprite;
 	sf::Texture TextureBall;
+
+	// Добавление страниц 
+	Menu menu;
 
 	if(!backgroundTexture.loadFromFile("Images/space.png"))
 		return -1;
@@ -27,7 +39,6 @@ int main()
 	Paddle player2(1555.f, 450.f, 15.f, 150.f,
 		sf::Keyboard::Up, sf::Keyboard::Down);
 
-	bool gameOver = false;
 	int scorePlayer1 = 0;
 	int scorePlayer2 = 0;
 
@@ -62,15 +73,23 @@ int main()
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
+			if (gameState == GameState::Menu)
+			{
+				int menuResult = menu.HandleEvent(window, event);
 
-			if (gameOver &&
+				if (menuResult == 1)
+					gameState = GameState::Playing;
+				else if (menuResult == 2)
+					window.close();
+			}
+			if (gameState == GameState::GameOver &&
 				event.type == sf::Event::KeyPressed &&
 				event.key.code == sf::Keyboard::R)
 			{
 				scorePlayer1 = 0;
 				scorePlayer2 = 0;
 
-				gameOver = false;
+				gameState = GameState::Playing;
 
 				ball.Reset(window);
 
@@ -86,11 +105,15 @@ int main()
 		//window.draw(backgroundSprite);
 		// 
 		//Update
-		if (!gameOver)
+
+		if (gameState == GameState::Menu)
+		{
+			menu.Update(window, deltaTime);
+		}
+		else if (gameState == GameState::Playing)
 		{
 			ball.Update(deltaTime, window);
 			ball.UpdateTrail(deltaTime);
-
 			int goal = ball.CheckGoal(window);
 
 			if (goal == 1)
@@ -104,20 +127,19 @@ int main()
 				ball.Reset(window);
 			}
 
-			if (scorePlayer1 >= 5)
+				if (scorePlayer1 >= 5)
 			{
-				gameOver = true;
+				gameState = GameState::GameOver;
 				winnerText.setString("Player 1 Wins!");
 			}
-			else if(scorePlayer2 >= 5)
+			else if (scorePlayer2 >= 5)
 			{
-				gameOver = true;
+				gameState = GameState::GameOver;
 				winnerText.setString("Player 2 Wins!");
 			}
 
 			scoreText1.setString(std::to_string(scorePlayer1));
 			scoreText2.setString(std::to_string(scorePlayer2));
-
 
 			player1.Update(deltaTime, window);
 			player2.Update(deltaTime, window);
@@ -131,15 +153,28 @@ int main()
 				ball.HandleCollision(player2);
 			}
 		}
+		else if (gameState == GameState::GameOver)
+		{
+			// Здесь будет обновление экрана завершения
+		}
 
 		//Draw
-		ball.Draw(window);
-		player1.Draw(window);
-		player2.Draw(window);
-		window.draw(scoreText1);
-		window.draw(scoreText2);
-		if (gameOver)
+		if (gameState == GameState::Menu)
+		{
+			menu.Draw(window);
+		}
+		else if (gameState == GameState::Playing)
+		{
+			ball.Draw(window);
+			player1.Draw(window);
+			player2.Draw(window);
+			window.draw(scoreText1);
+			window.draw(scoreText2);
+		}
+		else if (gameState == GameState::GameOver)
+		{
 			window.draw(winnerText);
+		}
 
 		window.display();
 	}
