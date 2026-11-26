@@ -19,7 +19,7 @@ int main()
 
 	sf::Clock clock;
 
-	Ball ball(17.5f, &TextureBall); // Создаем мяч с радиусом 25 пикселей
+	Ball ball(12.5f, &TextureBall); // Создаем мяч с радиусом 25 пикселей
 
 	//Players
 	Paddle player1(30.f, 450.f, 15.f, 150.f,
@@ -89,6 +89,7 @@ int main()
 		if (!gameOver)
 		{
 			ball.Update(deltaTime, window);
+			ball.UpdateTrail(deltaTime);
 
 			int goal = ball.CheckGoal(window);
 
