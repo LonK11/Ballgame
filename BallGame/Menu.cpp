@@ -34,7 +34,7 @@ Menu::Menu()
 		star.glow.setFillColor(sf::Color(100, 160, 255, 20));
 		star.glow.setOrigin(glowRadius, glowRadius);
 
-		star.speed = 20.f + static_cast<float>(rand() % 60);
+		star.speed = 15.f + radius * 20.f;
 
 		star.twinkleTime = static_cast<float>(rand() % 100) / 10.f;
 		star.twinkleSpeed = 1.f + static_cast<float>(rand() % 30) / 10.f;
@@ -156,7 +156,7 @@ void  Menu::Update(sf::RenderWindow& window, float deltaTime)
 
 		star.twinkleTime += star.twinkleSpeed * deltaTime;
 		float brightness = (std::sin(star.twinkleTime) + 1.f) / 2.f;
-		sf::Uint8 alpha = static_cast<sf::Uint8>(35.f + brightness * 70.f);
+		sf::Uint8 alpha = static_cast<sf::Uint8>(15.f + brightness * 60.f);
 
 		star.glow.setFillColor(sf::Color(100, 160, 255, alpha));
 	}
