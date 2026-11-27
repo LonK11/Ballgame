@@ -39,6 +39,6 @@ void Paddle::Reset()
 {
 	paddle.setPosition(
 		paddle.getPosition().x,
-		250.f
+		450.f
 	);
 }

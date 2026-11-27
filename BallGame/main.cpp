@@ -2,6 +2,7 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include "Menu.h"
+#include "GameOver.h"
 #include <string>
 
 enum class GameState
@@ -21,6 +22,7 @@ int main()
 
 	// Добавление страниц 
 	Menu menu;
+	GameOver gameOver;
 
 	if(!backgroundTexture.loadFromFile("Images/space.png"))
 		return -1;
@@ -98,6 +100,26 @@ int main()
 
 				winnerText.setString("");
 			}
+			if (gameState == GameState::GameOver)
+			{
+				int gameOverResult = gameOver.HandleEvent(window, event);
+
+				if (gameOverResult == 1)
+				{
+					scorePlayer1 = 0;
+					scorePlayer2 = 0;
+
+					ball.Reset(window);
+					player1.Reset();
+					player2.Reset();
+
+					gameState = GameState::Playing;
+				}
+				else if (gameOverResult == 2)
+				{
+					gameState = GameState::Menu;
+				}
+			}
 		}
 
 		window.clear();
@@ -130,12 +152,12 @@ int main()
 				if (scorePlayer1 >= 5)
 			{
 				gameState = GameState::GameOver;
-				winnerText.setString("Player 1 Wins!");
+				gameOver.SetWinner("Player 1 Wins!");
 			}
 			else if (scorePlayer2 >= 5)
 			{
 				gameState = GameState::GameOver;
-				winnerText.setString("Player 2 Wins!");
+				gameOver.SetWinner("Player 2 Wins!");
 			}
 
 			scoreText1.setString(std::to_string(scorePlayer1));
@@ -155,7 +177,7 @@ int main()
 		}
 		else if (gameState == GameState::GameOver)
 		{
-			// Здесь будет обновление экрана завершения
+			gameOver.Update(window, deltaTime);
 		}
 
 		//Draw
@@ -173,7 +195,14 @@ int main()
 		}
 		else if (gameState == GameState::GameOver)
 		{
-			window.draw(winnerText);
+			ball.Draw(window);
+			player1.Draw(window);
+			player2.Draw(window);
+
+			window.draw(scoreText1);
+			window.draw(scoreText2);
+
+			gameOver.Draw(window);
 		}
 
 		window.display();
